@@ -1,0 +1,66 @@
+:root {
+  --primary-blue: #057fff;
+}
+
+.navbar {
+  height: 80px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.nav-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+}
+
+.btn-text {
+  background: none;
+  border: none;
+  color: var(--primary-blue); /* Čista plava boja teksta */
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-text:hover {
+  text-decoration: underline;
+  text-decoration-color: var(--primary-blue);
+  text-decoration-thickness: 3px;
+  text-underline-offset: 10px;
+}
+
+.btn-primary {
+  background-color: var(--primary-blue);
+  color: white;
+  border: none;
+  padding: 14px 44px;
+  border-radius: 50px;
+  font-size: 1rem;
+  font-weight: 550;
+  letter-spacing: 1px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(5, 127, 255, 0.2);
+}
+
+.btn-primary:hover {
+  background-color: #046ce6;
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(5, 127, 255, 0.3);
+}

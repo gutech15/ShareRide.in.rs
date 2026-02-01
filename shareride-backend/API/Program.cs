@@ -49,6 +49,10 @@ builder.Services.AddControllers();
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddCors(options => {
+    options.AddPolicy("AllowAll", b => b.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
+});
+
 var app = builder.Build();
 
 if (app.Environment.IsDevelopment())
@@ -56,6 +60,7 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi(); 
     app.MapScalarApiReference();
 }
+app.UseCors("AllowAll");
 
 app.UseAuthentication(); 
 app.UseAuthorization(); 

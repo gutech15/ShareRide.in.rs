@@ -1,0 +1,137 @@
+.auth-page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.auth-main-content {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #f0f2f5;
+}
+
+.auth-container {
+  background-color: #fff;
+  border-radius: 20px;
+  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.1);
+  position: relative;
+  width: 800px;
+  height: 550px;
+  display: flex; /* Postavlja forme jednu pored druge */
+}
+
+.form-container {
+  width: 50%;
+  height: 100%;
+}
+
+form {
+  padding: 0 50px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Smanjeni razmaci između polja */
+input {
+  background-color: #f1f3f6;
+  border: none;
+  padding: 10px 15px;
+  margin: 4px 0;
+  width: 100%;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.form-title {
+  font-weight: 800;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.auth-main-btn {
+  width: 100%;
+  border-radius: 8px;
+  border: none;
+  background-color: #057fff;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 12px 0;
+  margin-top: 15px;
+  cursor: pointer;
+}
+
+.link-center-wrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.form-link-text {
+  font-size: 0.9rem;
+  color: #666;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.form-link-text:hover {
+  color: #057fff;
+  text-decoration: underline;
+}
+
+/* OKO / MAJMUN */
+.password-input-wrapper {
+  width: 100%;
+  position: relative;
+}
+
+.eye-icon {
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  font-size: 1.2rem;
+  user-select: none;
+}
+
+/* KLIZNI DIV (POKLOPAC) */
+.sliding-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #057fff;
+  z-index: 10;
+  transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 20px; /* Možeš ostaviti ili staviti 0 ako želiš oštre ivice dok klizi */
+}
+
+/* Pozicije za klizanje */
+.move-left {
+  transform: translateX(
+    100%
+  ); /* Pokriva desnu stranu (Register), Login se vidi levo */
+}
+
+.move-right {
+  transform: translateX(
+    0%
+  ); /* Pokriva levu stranu (Login), Register se vidi desno */
+}
+
+.overlay-logo {
+  width: 150px;
+  filter: brightness(0) invert(1); /* Beli logo */
+  pointer-events: none; /* Da ne smeta klikovima ako zatreba */
+}
