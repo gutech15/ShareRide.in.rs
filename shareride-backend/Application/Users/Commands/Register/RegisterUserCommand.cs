@@ -25,6 +25,10 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
 
     public async Task<UserDto> Handle(RegisterUserCommand request, CancellationToken cancellationToken)
     {
+        var existingUser = await _userManager.FindByEmailAsync(request.Email);
+        if (existingUser != null)
+            throw new ArgumentException("Ova e-mail adresa je vec iskoriscena.");
+
         var user = new User
         {
             UserName = request.Email,
@@ -34,23 +38,20 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
             PhoneNumber = request.PhoneNumber
         };
 
-        // CreateAsync automatski hesuje lozinku i cuva korisnika u bazu
         var result = await _userManager.CreateAsync(user, request.Password);
 
         if (!result.Succeeded)
         {
-            var errors = string.Join(", ", result.Errors.Select(e => e.Description));
-            throw new Exception($"Registracija nije uspela: {errors}");
+            var firstError = result.Errors.FirstOrDefault()?.Description ?? "Registracija neuspesna";
+            throw new ArgumentException(firstError);
         }
-
-        var token = _tokenService.CreateToken(user);
 
         return new UserDto(
             user.Id,
             user.FirstName,
             user.LastName,
             user.Email!,
-            token
+            _tokenService.CreateToken(user)
         );
     }
 }

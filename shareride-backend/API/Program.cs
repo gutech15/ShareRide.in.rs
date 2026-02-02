@@ -9,6 +9,7 @@ using Application.Common.Interfaces;
 using Infrastructure.Security;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using API.Middlewares;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -55,11 +56,14 @@ builder.Services.AddCors(options => {
 
 var app = builder.Build();
 
+app.UseMiddleware<ExceptionHandlingMiddleware>();
+
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi(); 
     app.MapScalarApiReference();
 }
+
 app.UseCors("AllowAll");
 
 app.UseAuthentication(); 

@@ -12,6 +12,7 @@ const AuthPage = () => {
   const startState = location.state?.initialIsLogin ?? true;
   const [isLogin, setIsLogin] = useState(startState);
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState("");
 
   const [loginData, setLoginData] = useState({
     email: "",
@@ -27,6 +28,7 @@ const AuthPage = () => {
   });
 
   const handleLoginChange = (e) => {
+    setError("");
     setLoginData({
       ...loginData,
       [e.target.name]: e.target.value,
@@ -51,9 +53,9 @@ const AuthPage = () => {
       loginUser(response.data);
 
       navigate("/dashboard");
-    } catch (error) {
-      const message = error.response?.data || "Pogresan mejl ili lozinka";
-      alert(message);
+    } catch (err) {
+      const message = err.response?.data?.detail || "Serverska greska";
+      setError(message);
     }
   };
 
@@ -70,9 +72,9 @@ const AuthPage = () => {
 
       loginUser(response.data);
       navigate("/dashboard");
-    } catch (error) {
-      const message = error.response?.data || "Greska prilikom registracije";
-      alert(message);
+    } catch (err) {
+      const message = err.response?.data?.detail || "Serverska greska";
+      setError(message);
     }
   };
 
@@ -128,11 +130,34 @@ const AuthPage = () => {
                   {showPassword ? "🐵" : "🙈"}
                 </span>
               </div>
+              {error && (
+                <div
+                  className="error-message"
+                  style={{
+                    color: "#ff4d4d",
+                    fontSize: "0.85rem",
+                    marginBottom: "10px",
+                    fontWeight: "600",
+                    backgroundColor: "#fff0f0",
+                    padding: "8px",
+                    borderRadius: "5px",
+                    width: "100%",
+                  }}
+                >
+                  ⚠️ {error}
+                </div>
+              )}
               <button type="submit" className="auth-main-btn">
                 Prijavi se
               </button>
               <div className="link-center-wrapper">
-                <p className="form-link-text" onClick={() => setIsLogin(false)}>
+                <p
+                  className="form-link-text"
+                  onClick={() => {
+                    setIsLogin(false);
+                    setError("");
+                  }}
+                >
                   Nemate nalog? Registrujte se
                 </p>
               </div>
@@ -195,13 +220,35 @@ const AuthPage = () => {
                   {showPassword ? "🐵" : "🙈"}
                 </span>
               </div>
-
+              {error && (
+                <div
+                  className="error-message"
+                  style={{
+                    color: "#ff4d4d",
+                    fontSize: "0.85rem",
+                    marginBottom: "10px",
+                    fontWeight: "600",
+                    backgroundColor: "#fff0f0",
+                    padding: "8px",
+                    borderRadius: "5px",
+                    width: "100%",
+                  }}
+                >
+                  ⚠️ {error}
+                </div>
+              )}
               <button type="submit" className="auth-main-btn">
                 Registruj se
               </button>
 
               <div className="link-center-wrapper">
-                <p className="form-link-text" onClick={() => setIsLogin(true)}>
+                <p
+                  className="form-link-text"
+                  onClick={() => {
+                    setIsLogin(true);
+                    setError("");
+                  }}
+                >
                   Već ste registrovani? Prijavite se
                 </p>
               </div>

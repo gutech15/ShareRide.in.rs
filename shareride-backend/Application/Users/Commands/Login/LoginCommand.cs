@@ -22,11 +22,13 @@ public class LoginHandler : IRequestHandler<LoginCommand, UserDto>
     {
         var user = await _userManager.FindByEmailAsync(request.Email);
 
-        if (user == null) throw new Exception("Nema korisnika sa tom mejl adresom.");
+        if (user == null)
+            throw new UnauthorizedAccessException("Korisnik sa ovom mejl adresom ne postoji.");
 
         var result = await _userManager.CheckPasswordAsync(user, request.Password);
 
-        if (!result) throw new Exception("Uneli ste neispravnu lozinku.");
+        if (!result)
+            throw new UnauthorizedAccessException("Lozinka koju ste uneli nije ispravna.");
 
         return new UserDto(
             user.Id,
