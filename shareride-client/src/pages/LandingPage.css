@@ -31,7 +31,7 @@
 .btn-text {
   background: none;
   border: none;
-  color: var(--primary-blue); /* Čista plava boja teksta */
+  color: var(--primary-blue);
   font-size: 1rem;
   cursor: pointer;
   font-weight: 700;
@@ -63,4 +63,14 @@
   background-color: #046ce6;
   transform: translateY(-1px);
   box-shadow: 0 8px 20px rgba(5, 127, 255, 0.3);
+}
+
+.plus-in-circle {
+  width: 24px;
+  padding-right: 5px;
+}
+
+.btn-text {
+  display: flex;
+  justify-content: center;
 }

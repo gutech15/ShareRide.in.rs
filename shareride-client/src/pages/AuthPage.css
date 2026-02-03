@@ -19,7 +19,7 @@
   position: relative;
   width: 800px;
   height: 550px;
-  display: flex; /* Postavlja forme jednu pored druge */
+  display: flex;
 }
 
 .form-container {
@@ -36,7 +36,6 @@ form {
   align-items: flex-start;
 }
 
-/* Smanjeni razmaci između polja */
 input {
   background-color: #f1f3f6;
   border: none;
@@ -85,7 +84,6 @@ input {
   text-decoration: underline;
 }
 
-/* OKO / MAJMUN */
 .password-input-wrapper {
   width: 100%;
   position: relative;
@@ -101,7 +99,6 @@ input {
   user-select: none;
 }
 
-/* KLIZNI DIV (POKLOPAC) */
 .sliding-overlay {
   position: absolute;
   top: 0;
@@ -114,24 +111,19 @@ input {
   display: flex;
   align-items: center;
   justify-content: center;
-  border-radius: 20px; /* Možeš ostaviti ili staviti 0 ako želiš oštre ivice dok klizi */
+  border-radius: 20px;
 }
 
-/* Pozicije za klizanje */
 .move-left {
-  transform: translateX(
-    100%
-  ); /* Pokriva desnu stranu (Register), Login se vidi levo */
+  transform: translateX(100%);
 }
 
 .move-right {
-  transform: translateX(
-    0%
-  ); /* Pokriva levu stranu (Login), Register se vidi desno */
+  transform: translateX(0%);
 }
 
 .overlay-logo {
   width: 150px;
-  filter: brightness(0) invert(1); /* Beli logo */
-  pointer-events: none; /* Da ne smeta klikovima ako zatreba */
+  filter: brightness(0) invert(1);
+  pointer-events: none;
 }

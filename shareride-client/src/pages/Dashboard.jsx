@@ -32,6 +32,13 @@ const Dashboard = () => {
             <img src="/ridesharelogobold.svg" alt="Logo" />
           </div>
           <div className="nav-actions">
+            <button
+              className="btn-text"
+              onClick={() => navigate("/create-ride")}
+            >
+              <img src="plusInCircle.svg" className="plus-in-circle"></img>
+              Kreiraj voznju
+            </button>
             <button className="btn-text" onClick={handleLogout}>
               Odjavi se
             </button>
