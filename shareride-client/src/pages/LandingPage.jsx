@@ -25,7 +25,7 @@ const LandingPage = () => {
                 navigate("/auth", { state: { initialIsLogin: false } })
               }
             >
-              Registruj se
+              Registrujte se
             </button>
             <button
               className="btn-primary"
@@ -33,7 +33,7 @@ const LandingPage = () => {
                 navigate("/auth", { state: { initialIsLogin: true } })
               }
             >
-              Prijavi se
+              Prijavite se
             </button>
           </div>
         </div>

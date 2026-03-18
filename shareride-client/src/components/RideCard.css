@@ -1,0 +1,171 @@
+.ride-card-dash {
+  background-color: #fff;
+  border-radius: 12px;
+  padding: 20px 40px;
+  margin-bottom: 15px;
+  transition: transform 0.2s;
+  cursor: pointer;
+}
+
+.ride-card-dash:hover {
+  transform: translateY(-2px);
+}
+
+.ride-card-dash.disabled {
+  opacity: 0.6;
+}
+
+/* GORNJA POLOVINA */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 15px;
+}
+
+.route-info {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex: 1;
+}
+
+.point {
+  display: flex;
+  flex-direction: column;
+}
+
+.point .time {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.point .city {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 600;
+}
+
+.path-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+
+.duration {
+  font-size: 0.8rem;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.dotted-line {
+  width: 100%;
+  height: 2px;
+  border-top: 2px dotted #ccc;
+  position: relative;
+}
+
+.dotted-line::after {
+  content: "";
+  position: absolute;
+  right: -2px;
+  top: -4px;
+  width: 6px;
+  height: 6px;
+  background-color: #ccc;
+  border-radius: 50%;
+}
+
+.price-status {
+  text-align: right;
+  min-width: 120px;
+}
+
+.price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: #333;
+}
+
+.status-text {
+  font-weight: 700;
+  font-size: 0.9rem;
+}
+
+.status-text.full {
+  color: #e74c3c;
+}
+.status-text.no-seats {
+  color: #f39c12;
+}
+
+.divider-horizontal {
+  height: 1px;
+  background-color: #eee;
+  margin: 0 -20px;
+}
+
+/* DONJA POLOVINA */
+.card-bottom {
+  padding-top: 15px;
+}
+
+.driver-section {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.car-icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.6;
+}
+
+.driver-img {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #eee;
+}
+
+.driver-meta {
+  display: flex;
+  flex-direction: column;
+}
+
+.driver-name {
+  font-weight: 700;
+  color: #333;
+  font-size: 0.95rem;
+}
+
+.rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.star {
+  color: #f1c40f;
+}
+
+.auto-confirm {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #27ae60;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.vertical-line {
+  width: 1px;
+  height: 20px;
+  background-color: #ddd;
+}

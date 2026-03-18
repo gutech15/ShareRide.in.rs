@@ -4,12 +4,6 @@
   flex-direction: column;
 }
 
-.navbar {
-  background-color: #fff;
-  border-bottom: 1px solid #eee;
-  padding: 10px 0;
-}
-
 .form-main-content {
   flex: 1;
   display: flex;

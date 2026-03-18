@@ -40,7 +40,7 @@ const CreateRide = () => {
       await API.post("/rides", payload);
       navigate("/dashboard");
     } catch (err) {
-      setError(err.response?.data?.detail || "Greška pri kreiranju vožnje");
+      setError(err.response?.data?.detail || "Greska pri kreiranju voznje");
     }
   };
 
@@ -67,7 +67,7 @@ const CreateRide = () => {
       <div className="form-main-content">
         <div className="ride-card">
           <form onSubmit={handleSubmit} className="ride-form-layout">
-            <h1 className="form-title">Nova vožnja</h1>
+            <h1 className="form-title">Nova voznja</h1>
             {error && <div className="error-box">{error}</div>}
 
             <div className="form-row">
@@ -151,7 +151,7 @@ const CreateRide = () => {
                   name="allowSmoking"
                   onChange={handleChange}
                 />{" "}
-                Dozvoljeno pušenje
+                Dozvoljeno pusenje
               </label>
               <label className="checkbox-control">
                 <input
@@ -167,7 +167,7 @@ const CreateRide = () => {
                   name="maxTwoBackSeats"
                   onChange={handleChange}
                 />{" "}
-                Max. 2 pozadi
+                Najvise 2 pozadi
               </label>
               <label className="checkbox-control">
                 <input
@@ -180,7 +180,7 @@ const CreateRide = () => {
             </div>
 
             <button type="submit" className="auth-main-btn">
-              Kreiraj vožnju
+              Kreirajte voznju
             </button>
           </form>
         </div>

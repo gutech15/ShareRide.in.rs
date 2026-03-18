@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Mvc;
+﻿using Application.Rides.Commands.Create;
+using Application.Rides.Queries.GetRideDetails;
+using Application.Rides.Queries.GetRides;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
-using Application.Rides.Commands.Create;
 
 namespace API.Controllers;
 
@@ -28,5 +30,21 @@ public class RidesController : ControllerBase
         var resultId = await _mediator.Send(command with { DriverId = Guid.Parse(userIdClaim.Value) });
 
         return Ok(resultId);
+    }
+
+    [HttpGet]
+    public async Task<ActionResult<List<RideSearchDto>>> GetRides(
+    [FromQuery] string? startCity,
+    [FromQuery] string? endCity,
+    [FromQuery] DateTime? date)
+    {
+        var query = new GetRidesQuery(startCity, endCity, date);
+        return Ok(await _mediator.Send(query));
+    }
+
+    [HttpGet("{id}")]
+    public async Task<ActionResult<RideDetailsDto>> GetRideDetails(Guid id)
+    {
+        return Ok(await _mediator.Send(new GetRideDetailsQuery(id)));
     }
 }
