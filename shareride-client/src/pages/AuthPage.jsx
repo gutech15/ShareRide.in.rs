@@ -80,24 +80,6 @@ const AuthPage = () => {
 
   return (
     <div className="auth-page-wrapper">
-      <nav className="navbar">
-        <div className="container nav-content">
-          <div className="logo">
-            <img
-              src="/ridesharelogobold.svg"
-              onClick={() => navigate("/")}
-              style={{ cursor: "pointer" }}
-              alt="Logo"
-            />
-          </div>
-          <div className="nav-actions">
-            <button className="btn-text" onClick={() => navigate("/")}>
-              ← Vrati se nazad
-            </button>
-          </div>
-        </div>
-      </nav>
-
       <div className="auth-main-content">
         <div
           className={`auth-container ${!isLogin ? "right-panel-active" : ""}`}

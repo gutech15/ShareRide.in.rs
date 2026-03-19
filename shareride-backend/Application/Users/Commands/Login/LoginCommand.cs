@@ -34,6 +34,7 @@ public class LoginHandler : IRequestHandler<LoginCommand, UserDto>
             user.Id,
             user.FirstName,
             user.LastName,
+            user.ProfilePictureUrl,
             user.Email!,
             _tokenService.CreateToken(user)
         );

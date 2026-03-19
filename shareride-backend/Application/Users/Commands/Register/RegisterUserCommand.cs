@@ -35,7 +35,8 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
             Email = request.Email,
             FirstName = request.FirstName,
             LastName = request.LastName,
-            PhoneNumber = request.PhoneNumber
+            PhoneNumber = request.PhoneNumber,
+            ProfilePictureUrl = null
         };
 
         var result = await _userManager.CreateAsync(user, request.Password);
@@ -50,6 +51,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
             user.Id,
             user.FirstName,
             user.LastName,
+            user.ProfilePictureUrl,
             user.Email!,
             _tokenService.CreateToken(user)
         );

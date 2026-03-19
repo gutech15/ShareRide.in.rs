@@ -1,5 +1,4 @@
 import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
 import API from "../api/axiosInstance";
 import RideCard from "../components/RideCard";
@@ -7,8 +6,6 @@ import "./Dashboard.css";
 
 const Dashboard = () => {
   const user = useAuthStore((state) => state.user);
-  const logout = useAuthStore((state) => state.logout);
-  const navigate = useNavigate();
 
   const [rides, setRides] = useState([]);
   const [hasSearched, setHasSearched] = useState(false);
@@ -78,6 +75,7 @@ const Dashboard = () => {
     try {
       const response = await API.get("/rides", { params: searchParams });
       setRides(response.data);
+      console.log(response.data);
       setHasSearched(true);
     } catch (err) {
       console.error(err);
@@ -135,41 +133,6 @@ const Dashboard = () => {
 
   return (
     <div className="dashboard-wrapper">
-      <nav className="navbar">
-        <div className="container nav-content">
-          <div className="logo">
-            <img
-              src="/ridesharelogobold.svg"
-              alt="Logo"
-              onClick={() => navigate("/")}
-              style={{ cursor: "pointer" }}
-            />
-          </div>
-          <div className="nav-actions">
-            <button
-              className="btn-text"
-              onClick={() => navigate("/create-ride")}
-            >
-              <img
-                src="plusInCircle.svg"
-                className="plus-in-circle"
-                alt="plus"
-              />{" "}
-              Kreirajte voznju
-            </button>
-            <button
-              className="btn-text"
-              onClick={() => {
-                logout();
-                navigate("/");
-              }}
-            >
-              Odjavite se
-            </button>
-          </div>
-        </div>
-      </nav>
-
       <div className="search-section-full">
         <div className="container">
           <form className="search-bar" onSubmit={handleSearch}>

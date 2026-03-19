@@ -46,24 +46,6 @@ const CreateRide = () => {
 
   return (
     <div className="create-ride-page-wrapper">
-      <nav className="navbar">
-        <div className="container nav-content">
-          <div className="logo">
-            <img
-              src="/ridesharelogobold.svg"
-              onClick={() => navigate("/")}
-              style={{ cursor: "pointer" }}
-              alt="Logo"
-            />
-          </div>
-          <div className="nav-actions">
-            <button className="btn-text" onClick={() => navigate("/dashboard")}>
-              ← Vrati se nazad
-            </button>
-          </div>
-        </div>
-      </nav>
-
       <div className="form-main-content">
         <div className="ride-card">
           <form onSubmit={handleSubmit} className="ride-form-layout">
