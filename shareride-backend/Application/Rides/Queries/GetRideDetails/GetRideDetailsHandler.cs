@@ -20,6 +20,9 @@ public class GetRideDetailsHandler : IRequestHandler<GetRideDetailsQuery, RideDe
 
         if (ride == null) throw new KeyNotFoundException("Voznja nije pronadjena.");
 
+        var userBooking = ride.Bookings
+        .FirstOrDefault(b => b.PassengerId == request.CurrentUserId);
+
         return new RideDetailsDto(
             ride.Id,
             ride.StartCity, ride.EndCity,
@@ -36,14 +39,16 @@ public class GetRideDetailsHandler : IRequestHandler<GetRideDetailsQuery, RideDe
             ride.Driver.ProfilePictureUrl,
             ride.Driver.Bio,
             ride.Driver.ReviewsReceived.Any() ? ride.Driver.ReviewsReceived.Average(rev => rev.Rating) : 0,
-            // Mapiranje putnika koji imaju odobrenu rezervaciju
             ride.Bookings
                 .Where(b => b.Status == BookingStatus.Approved)
                 .Select(b => new PassengerDto(
                     b.Passenger.Id,
                     b.Passenger.FirstName,
                     b.Passenger.ProfilePictureUrl
-                )).ToList()
+                )).ToList(),
+            ride.Status,
+            userBooking?.Status,
+            userBooking?.Id
         );
     }
 }

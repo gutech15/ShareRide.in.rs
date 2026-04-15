@@ -1,19 +1,28 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
+import { getImageUrl } from "../api/imageHelper";
 import "./RideCard.css";
 
 const RideCard = ({ ride, requestedSeats }) => {
+  const navigate = useNavigate();
   const isFull = ride.remainingSeats === 0;
   const notEnoughSeats = ride.remainingSeats < requestedSeats;
 
   const getDuration = (start, end) => {
-    const durationMs = new Date(end) - new Date(start);
+    const durationMs = end - start;
+
     const hours = Math.floor(durationMs / (1000 * 60 * 60));
     const minutes = Math.floor((durationMs / (1000 * 60)) % 60);
+
+    if (hours === 0 && minutes === 0) return "0min";
+    if (hours === 0) return `${minutes}min`;
+    if (minutes === 0) return `${hours}h`;
+
     return `${hours}h ${minutes}min`;
   };
 
-  const formatTime = (dateStr) => {
-    return new Date(dateStr).toLocaleTimeString("sr-RS", {
+  const formatTime = (date) => {
+    return date.toLocaleTimeString("sr-RS", {
       hour: "2-digit",
       minute: "2-digit",
     });
@@ -22,8 +31,11 @@ const RideCard = ({ ride, requestedSeats }) => {
   return (
     <div
       className={`ride-card-dash ${isFull || notEnoughSeats ? "disabled" : ""}`}
+      onClick={() => {
+        if (isFull || notEnoughSeats) return;
+        navigate(`/rides/${ride.id}`);
+      }}
     >
-      {/* GORNJA POLOVINA */}
       <div className="card-top">
         <div className="route-info">
           <div className="point">
@@ -57,12 +69,11 @@ const RideCard = ({ ride, requestedSeats }) => {
 
       <div className="divider-horizontal"></div>
 
-      {/* DONJA POLOVINA */}
       <div className="card-bottom">
         <div className="driver-section">
-          <img src="/car-icon.svg" alt="car" className="car-icon" />
+          <img src="/rides-icon.svg" alt="car" className="car-icon" />
           <img
-            src={ride.driverProfilePictureUrl || "/default-avatar.svg"}
+            src={getImageUrl(ride.driverProfilePictureUrl)}
             alt={ride.driverFirstName}
             className="driver-img"
           />
@@ -81,7 +92,7 @@ const RideCard = ({ ride, requestedSeats }) => {
           {ride.isAutoConfirmation && (
             <div className="auto-confirm">
               <div className="vertical-line"></div>
-              <span>⚡ Automatska rezervacija</span>
+              <span>✔ Automatska rezervacija</span>
             </div>
           )}
         </div>

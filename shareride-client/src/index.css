@@ -8,7 +8,7 @@
 
 body {
   font-family: "Plus Jakarta Sans", sans-serif;
-  background-color: white;
+  background-color: #f0f2f5;
   color: #333;
   line-height: 1.5;
 }
@@ -24,4 +24,28 @@ textarea {
 .container {
   max-width: 1200px;
   margin: 0 auto;
+}
+
+:root {
+  --nav-height: 92px;
+}
+
+.main-content {
+  padding-top: var(--nav-height);
+}
+
+.landing-container {
+  margin-top: calc(var(--nav-height) * -1);
+}
+
+::-webkit-scrollbar {
+  display: none;
+}
+
+* {
+  scrollbar-width: none;
+}
+
+* {
+  -ms-overflow-style: none;
 }

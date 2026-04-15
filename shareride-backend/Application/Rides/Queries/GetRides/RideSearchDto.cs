@@ -9,12 +9,10 @@ public record RideSearchDto(
     int PricePerSeat,
     int RemainingSeats,
     bool IsAutoConfirmation,
-    // Podaci o vozacu
     Guid DriverId,
     string DriverFirstName,
     string? DriverProfilePictureUrl,
     double AverageRating,
-    // Polja za filtriranje na frontendu
     bool AllowSmoking,
     bool AllowPets,
     bool MaxTwoBackSeats

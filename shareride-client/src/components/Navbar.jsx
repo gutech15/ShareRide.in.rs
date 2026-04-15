@@ -1,26 +1,66 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
-import { useState } from "react";
+import { useRideStore } from "../store/useRideStore";
+import useNotificationStore from "../store/useNotificationStore";
+import useChatStore from "../store/useChatStore";
+import { useState, useEffect, useRef } from "react";
+import { getImageUrl } from "../api/imageHelper";
+import "./Navbar.css";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { user, logout } = useAuthStore();
+  const { unreadCount, stopConnection } = useNotificationStore();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { clearAllRides } = useRideStore();
+
+  const { unreadCount: notificationCount } = useNotificationStore();
+  const { totalChatUnreadCount, loadConversations, startChatConnection } =
+    useChatStore();
+
+  const menuRef = useRef(null);
 
   const isLandingPage = location.pathname === "/";
+  const isDashboard = location.pathname === "/dashboard";
   const isAuthPage = location.pathname === "/auth";
-  const isCreateRide = location.pathname === "/create-ride";
 
-  // navbar - desni deo koji zavisi od toga na kojoj smo stranici
+  useEffect(() => {
+    if (user) {
+      startChatConnection();
+      loadConversations();
+    }
+    const handleClickOutside = (event) => {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isMenuOpen, user]);
+
+  const totalAlerts = (notificationCount || 0) + (totalChatUnreadCount || 0);
+
+  const handleLogout = async () => {
+    await stopConnection();
+    clearAllRides();
+    logout();
+    navigate("/");
+  };
 
   let renderRightSide;
 
-  // 1. slucaj - ako smo na pocetnoj stranici, treba da se prikazuju dugmici "Registruj se" i "Prijavi se" koji vode na /auth
   if (isLandingPage) {
     renderRightSide = (
-      <div style={{ display: "flex", gap: "10px" }}>
+      <div className="nav-auth-group">
         <button
+          className="nav-btn-secondary"
           onClick={() =>
             navigate("/auth", { state: { initialIsLogin: false } })
           }
@@ -28,75 +68,129 @@ const Navbar = () => {
           Registruj se
         </button>
         <button
+          className="nav-btn-primary"
           onClick={() => navigate("/auth", { state: { initialIsLogin: true } })}
         >
           Prijavi se
         </button>
       </div>
     );
-  }
-  // 2. slucaj - ako smo na /auth stranici, treba da se prikaze samo dugme "Vratite se nazad" koje vodi na "/"
-  else if (isAuthPage) {
+  } else if (isAuthPage) {
     renderRightSide = (
-      <button onClick={() => navigate("/")}>Vrati se nazad</button>
+      <button className="nav-btn-secondary" onClick={() => navigate("/")}>
+        ← Vrati se nazad
+      </button>
     );
-  }
-  // 3. slucaj - korisnik je ulogovan, treba da se prikaze dugme "Ponudite voznju" i slika korisnika
-  else {
+  } else {
     renderRightSide = (
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          gap: "20px",
-          position: "relative",
-        }}
-      >
-        {isCreateRide ? (
-          <button onClick={() => navigate("/dashboard")}>Vrati se nazad</button>
+      <div className="nav-user-section" ref={menuRef}>
+        {!isDashboard ? (
+          <button
+            className="nav-btn-secondary"
+            onClick={() => navigate("/dashboard")}
+          >
+            ← Vrati se na početnu
+          </button>
         ) : (
-          <button onClick={() => navigate("/create-ride")}>
-            Ponudi voznju
+          <button
+            className="nav-btn-secondary"
+            onClick={() => navigate("/create-ride")}
+          >
+            Ponudi vožnju
           </button>
         )}
 
         <div
-          style={{ cursor: "pointer" }}
+          className="nav-profile-wrapper"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <img
-            src={user?.profilePictureUrl || "/default-avatar.svg"}
+            src={getImageUrl(user?.profilePictureUrl)}
             alt="Profil"
-            style={{
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              objectFit: "cover",
-              border: "1px solid #ccc",
-            }}
+            className="nav-profile-img"
           />
+          {totalAlerts > 0 && (
+            <span className="nav-notification-badge">{totalAlerts}</span>
+          )}
         </div>
 
         {isMenuOpen && (
-          <div
-            style={{
-              position: "absolute",
-              top: "50px",
-              right: "0",
-              background: "white",
-              border: "1px solid #ccc",
-              padding: "10px",
-              zIndex: 100,
-            }}
-          >
+          <div className="dropdown-menu">
             <button
+              className="dropdown-item"
               onClick={() => {
-                logout();
-                navigate("/");
+                navigate(`/profile/${user?.id}`);
                 setIsMenuOpen(false);
               }}
             >
-              Odjavi se
+              <span className="nav-icon icon-profile"></span>
+              <span>Profil</span>
+            </button>
+
+            <button
+              className="dropdown-item"
+              onClick={() => {
+                navigate("/my-rides");
+                setIsMenuOpen(false);
+              }}
+            >
+              <span className="nav-icon icon-rides"></span>
+              <span>Moje vožnje</span>
+            </button>
+
+            <button
+              className="dropdown-item"
+              onClick={() => {
+                navigate("/requests");
+                setIsMenuOpen(false);
+              }}
+            >
+              <span className="nav-icon icon-requests"></span>
+              <span>Zahtevi</span>
+            </button>
+
+            <button
+              className="dropdown-item"
+              onClick={() => {
+                navigate("/chat");
+                setIsMenuOpen(false);
+              }}
+            >
+              <span className="nav-icon icon-chat"></span>
+              <span>Poruke</span>
+
+              {totalChatUnreadCount > 0 && (
+                <span className="dropdown-unread-count chat-badge">
+                  {totalChatUnreadCount}
+                </span>
+              )}
+            </button>
+
+            <button
+              className="dropdown-item"
+              onClick={() => {
+                navigate("/notifications");
+                setIsMenuOpen(false);
+              }}
+            >
+              <span className="nav-icon icon-bell"></span>
+              <span>Obaveštenja</span>
+              {unreadCount > 0 && (
+                <span className="dropdown-unread-count">{unreadCount}</span>
+              )}
+            </button>
+
+            <div className="dropdown-divider"></div>
+
+            <button
+              className="dropdown-item logout-item"
+              onClick={() => {
+                handleLogout();
+                setIsMenuOpen(false);
+              }}
+            >
+              <span className="nav-icon icon-logout"></span>
+              <span>Odjavi se</span>
             </button>
           </div>
         )}
@@ -105,24 +199,20 @@ const Navbar = () => {
   }
 
   return (
-    <nav
-      style={{
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        padding: "1rem 2rem",
-        borderBottom: "1px solid #eee",
-      }}
-    >
-      <div style={{ cursor: "pointer" }}>
-        <img
-          src="/ridesharelogobold.svg"
-          alt="ShareRide Logo"
-          style={{ height: "40px" }}
-        />
+    <nav className="navbar-main">
+      <div className="navbar-container">
+        <div
+          className="navbar-logo-wrapper"
+          onClick={() => navigate(user ? "/dashboard" : "/")}
+        >
+          <img
+            src="/logo-nov.svg"
+            alt="ShareRide Logo"
+            className="navbar-logo"
+          />
+        </div>
+        {renderRightSide}
       </div>
-
-      {renderRightSide}
     </nav>
   );
 };

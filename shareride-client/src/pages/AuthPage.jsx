@@ -24,6 +24,7 @@ const AuthPage = () => {
     lastName: "",
     email: "",
     phoneNumber: "",
+    dateOfBirth: "",
     password: "",
   });
 
@@ -67,10 +68,12 @@ const AuthPage = () => {
         lastName: registerData.lastName,
         email: registerData.email,
         phoneNumber: registerData.phoneNumber,
+        dateOfBirth: registerData.dateOfBirth,
         password: registerData.password,
       });
 
       loginUser(response.data);
+      console.log(response.data);
       navigate("/dashboard");
     } catch (err) {
       const message = err.response?.data?.detail || "Serverska greska";
@@ -86,7 +89,6 @@ const AuthPage = () => {
         >
           <div className="form-container login-side">
             <form onSubmit={handleLoginSubmit}>
-              {" "}
               <h1 className="form-title">Prijavi se</h1>
               <input
                 type="email"
@@ -112,23 +114,7 @@ const AuthPage = () => {
                   {showPassword ? "🐵" : "🙈"}
                 </span>
               </div>
-              {error && (
-                <div
-                  className="error-message"
-                  style={{
-                    color: "#ff4d4d",
-                    fontSize: "0.85rem",
-                    marginBottom: "10px",
-                    fontWeight: "600",
-                    backgroundColor: "#fff0f0",
-                    padding: "8px",
-                    borderRadius: "5px",
-                    width: "100%",
-                  }}
-                >
-                  ⚠️ {error}
-                </div>
-              )}
+              {error && <div className="error-message">⚠️ {error}</div>}
               <button type="submit" className="auth-main-btn">
                 Prijavi se
               </button>
@@ -140,7 +126,7 @@ const AuthPage = () => {
                     setError("");
                   }}
                 >
-                  Nemate nalog? Registrujte se
+                  Nemaš nalog? Registruj se
                 </p>
               </div>
             </form>
@@ -150,23 +136,24 @@ const AuthPage = () => {
             <form onSubmit={handleRegisterSubmit}>
               <h1 className="form-title">Napravi nalog</h1>
 
-              <input
-                type="text"
-                name="firstName"
-                placeholder="Ime"
-                value={registerData.firstName}
-                onChange={handleRegisterChange}
-                required
-              />
-
-              <input
-                type="text"
-                name="lastName"
-                placeholder="Prezime"
-                value={registerData.lastName}
-                onChange={handleRegisterChange}
-                required
-              />
+              <div className="form-row">
+                <input
+                  type="text"
+                  name="firstName"
+                  placeholder="Ime"
+                  value={registerData.firstName}
+                  onChange={handleRegisterChange}
+                  required
+                />
+                <input
+                  type="text"
+                  name="lastName"
+                  placeholder="Prezime"
+                  value={registerData.lastName}
+                  onChange={handleRegisterChange}
+                  required
+                />
+              </div>
 
               <input
                 type="email"
@@ -179,9 +166,17 @@ const AuthPage = () => {
 
               <input
                 type="tel"
-                name="phone"
+                name="phoneNumber"
                 placeholder="Broj telefona"
-                value={registerData.phone}
+                value={registerData.phoneNumber}
+                onChange={handleRegisterChange}
+                required
+              />
+
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={registerData.dateOfBirth}
                 onChange={handleRegisterChange}
                 required
               />
@@ -202,23 +197,7 @@ const AuthPage = () => {
                   {showPassword ? "🐵" : "🙈"}
                 </span>
               </div>
-              {error && (
-                <div
-                  className="error-message"
-                  style={{
-                    color: "#ff4d4d",
-                    fontSize: "0.85rem",
-                    marginBottom: "10px",
-                    fontWeight: "600",
-                    backgroundColor: "#fff0f0",
-                    padding: "8px",
-                    borderRadius: "5px",
-                    width: "100%",
-                  }}
-                >
-                  ⚠️ {error}
-                </div>
-              )}
+              {error && <div className="error-message">⚠️ {error}</div>}
               <button type="submit" className="auth-main-btn">
                 Registruj se
               </button>
@@ -231,7 +210,7 @@ const AuthPage = () => {
                     setError("");
                   }}
                 >
-                  Već ste registrovani? Prijavite se
+                  Već imaš nalog? Prijavi se
                 </p>
               </div>
             </form>
@@ -240,11 +219,7 @@ const AuthPage = () => {
           <div
             className={`sliding-overlay ${isLogin ? "move-left" : "move-right"}`}
           >
-            <img
-              src="/ridesharelogobold.svg"
-              className="overlay-logo"
-              alt="Logo"
-            />
+            <img src="/logo-nov.svg" className="overlay-logo" alt="Logo" />
           </div>
         </div>
       </div>

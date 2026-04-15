@@ -2,4 +2,4 @@
 
 namespace Application.Rides.Queries.GetRideDetails;
 
-public record GetRideDetailsQuery(Guid Id) : IRequest<RideDetailsDto>;
+public record GetRideDetailsQuery(Guid Id, Guid? CurrentUserId) : IRequest<RideDetailsDto>;

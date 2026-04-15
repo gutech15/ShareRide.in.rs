@@ -1,0 +1,139 @@
+.rate-ride-container {
+  padding-top: 40px;
+  max-width: 700px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  font-weight: 600;
+  margin-bottom: 20px;
+  padding: 0;
+}
+
+.rate-page-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #222;
+  margin-bottom: 30px;
+}
+
+.rate-cards-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.rate-card {
+  display: flex;
+  background: #fff;
+  border-radius: 12px;
+  padding: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  gap: 30px;
+}
+
+.rate-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-width: 120px;
+}
+
+.rate-profile-img {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  object-fit: cover;
+  background-color: #eee;
+  margin-bottom: 12px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.rate-name {
+  font-weight: 700;
+  color: #333;
+  text-align: center;
+  font-size: 0.95rem;
+}
+
+.rate-right {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.star-row {
+  display: flex;
+  gap: 8px;
+}
+
+.star-svg {
+  cursor: pointer;
+  stroke: #f39c12;
+  stroke-width: 2;
+  fill: transparent;
+  transition: 0.2s ease-in-out;
+}
+
+.star-svg.filled {
+  fill: #f39c12;
+}
+
+.star-svg.disabled {
+  cursor: default;
+}
+
+.comment-input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-family: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.2s;
+}
+
+.comment-input:focus {
+  border-color: #3498db;
+}
+
+.comment-input:disabled {
+  background-color: #f9f9f9;
+  color: #777;
+  border-color: #eee;
+}
+
+.submit-rate-btn {
+  background-color: #3498db;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 0.95rem;
+  cursor: pointer;
+  align-self: flex-start;
+  transition: background-color 0.2s;
+}
+
+.submit-rate-btn:hover:not(:disabled) {
+  background-color: #2980b9;
+}
+
+.submit-rate-btn:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+.rate-card.rated-mode {
+  background-color: #fafafa;
+  border: 1px solid #eee;
+  box-shadow: none;
+}

@@ -1,4 +1,6 @@
-﻿namespace Application.Rides.Queries.GetRideDetails;
+﻿using Domain.Enums;
+
+namespace Application.Rides.Queries.GetRideDetails;
 
 public record RideDetailsDto(
     Guid Id,
@@ -9,15 +11,16 @@ public record RideDetailsDto(
     int PricePerSeat,
     bool AllowSmoking, bool AllowPets,
     bool MaxTwoBackSeats, bool IsAutoConfirmation,
-    // Vozac detaljno
     Guid DriverId,
     string DriverFirstName,
     string DriverLastName,
     string? DriverProfilePictureUrl,
     string? DriverBio,
     double DriverAverageRating,
-    // Lista putnika (Approved Bookings)
-    List<PassengerDto> Passengers
+    List<PassengerDto> Passengers,
+    RideStatus Status,
+    BookingStatus? CurrentUserBookingStatus,
+    Guid? CurrentUserBookingId
 );
 
 public record PassengerDto(

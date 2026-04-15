@@ -16,7 +16,6 @@ public class Ride
     public int AvailableSeats { get; set; }
     public int PricePerSeat { get; set; } 
 
-    // pravila, za filtriranje
     public bool AllowSmoking { get; set; }
     public bool AllowPets { get; set; }
     public bool MaxTwoBackSeats { get; set; }

@@ -9,6 +9,7 @@ public class User : IdentityUser<Guid>
     public string LastName { get; set; } = string.Empty;
     public string? ProfilePictureUrl { get; set; }
     public string? Bio { get; set; }
+    public DateTime DateOfBirth { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
 
     public Vehicle? Vehicle { get; set; }
@@ -17,4 +18,5 @@ public class User : IdentityUser<Guid>
     public ICollection<Booking> BookingsAsPassenger { get; set; } = new List<Booking>();
     public ICollection<Review> ReviewsReceived { get; set; } = new List<Review>();
     public ICollection<Review> ReviewsGiven { get; set; } = new List<Review>();
+    public ICollection<Notification> Notifications { get; set; } = new List<Notification>();
 }

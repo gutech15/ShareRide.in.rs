@@ -5,5 +5,6 @@ public enum BookingStatus
     Pending,
     Approved,
     Rejected,
-    CancelledByPassenger
+    CancelledByPassenger,
+    CancelledByDriver
 }

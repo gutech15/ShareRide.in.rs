@@ -22,7 +22,8 @@ public class GetRidesHandler : IRequestHandler<GetRidesQuery, List<RideSearchDto
             .Include(r => r.Bookings)
             .AsQueryable();
 
-        // 1. Osnovno filtriranje (Gradovi i Datum)
+        query = query.Where(r => r.Status == RideStatus.Active);
+
         if (!string.IsNullOrWhiteSpace(request.StartCity))
             query = query.Where(r => r.StartCity.ToLower() == request.StartCity.ToLower());
 
@@ -33,9 +34,14 @@ public class GetRidesHandler : IRequestHandler<GetRidesQuery, List<RideSearchDto
         {
             var searchDate = request.Date.Value.Date;
             query = query.Where(r => r.DepartureTime.Date == searchDate);
+
+            if (searchDate == DateTime.UtcNow.Date)
+            {
+                var timeThreshold = DateTime.UtcNow.AddHours(1);
+                query = query.Where(r => r.DepartureTime >= timeThreshold);
+            }
         }
 
-        // 2. Projekcija u RideSearchDto
         return await query
             .Select(r => new RideSearchDto(
                 r.Id,
@@ -45,7 +51,6 @@ public class GetRidesHandler : IRequestHandler<GetRidesQuery, List<RideSearchDto
                 r.ArrivalTime,
                 r.PricePerSeat,
 
-                // Kalkulacija slobodnih mesta
                 r.AvailableSeats - r.Bookings
                     .Where(b => b.Status == BookingStatus.Approved)
                     .Sum(b => b.SeatsReserved),
@@ -55,7 +60,6 @@ public class GetRidesHandler : IRequestHandler<GetRidesQuery, List<RideSearchDto
                 r.Driver.FirstName,
                 r.Driver.ProfilePictureUrl,
 
-                // Kalkulacija prosecne ocene (ako nema ocena, vraca 0)
                 r.Driver.ReviewsReceived.Any()
                     ? r.Driver.ReviewsReceived.Average(rev => rev.Rating)
                     : 0,

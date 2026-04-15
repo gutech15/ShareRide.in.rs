@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { useAuthStore } from "../store/useAuthStore";
+import { useRideStore } from "../store/useRideStore";
 import API from "../api/axiosInstance";
 import RideCard from "../components/RideCard";
 import "./Dashboard.css";
@@ -7,35 +8,29 @@ import "./Dashboard.css";
 const Dashboard = () => {
   const user = useAuthStore((state) => state.user);
 
-  const [rides, setRides] = useState([]);
-  const [hasSearched, setHasSearched] = useState(false);
+  const {
+    searchParams,
+    setSearchParams,
+    searchResults,
+    setSearchResults,
+    filters,
+    setFilters,
+    hasSearched,
+  } = useRideStore();
 
-  const [filters, setFilters] = useState({
-    sortBy: "earliest",
-    timeRange: [],
-    amenities: {
-      maxTwoBack: false,
-      autoConfirm: false,
-      smoking: false,
-      pets: false,
-    },
+  const [formValues, setFormValues] = useState({
+    startCity: searchParams.startCity || "",
+    endCity: searchParams.endCity || "",
+    date: searchParams.date || "",
+    seats: searchParams.seats || 1,
   });
 
-  const [searchParams, setSearchParams] = useState({
-    startCity: "",
-    endCity: "",
-    date: "",
-    seats: 1,
-  });
-
-  // glavna logika filtriranja
   const filteredRides = useMemo(() => {
-    let result = [...rides];
+    let result = [...searchResults];
 
-    // filtriranje po vremenu
     if (filters.timeRange.length > 0) {
       result = result.filter((ride) => {
-        const hour = new Date(ride.departureTime).getHours();
+        const hour = ride.departureTime.getHours();
         const isMorning = hour >= 6 && hour <= 12;
         const isAfternoon = hour > 12 && hour <= 18;
 
@@ -45,16 +40,14 @@ const Dashboard = () => {
       });
     }
 
-    // filtriranje po opcijama
     if (filters.amenities.maxTwoBack)
-      result = result.filter((r) => r.maxTwoBack);
+      result = result.filter((r) => r.maxTwoBackSeats);
     if (filters.amenities.autoConfirm)
       result = result.filter((r) => r.isAutoConfirmation);
     if (filters.amenities.smoking)
       result = result.filter((r) => r.allowSmoking);
     if (filters.amenities.pets) result = result.filter((r) => r.allowPets);
 
-    // sortiranje
     if (filters.sortBy === "earliest") {
       result.sort(
         (a, b) => new Date(a.departureTime) - new Date(b.departureTime),
@@ -64,19 +57,35 @@ const Dashboard = () => {
     }
 
     return result;
-  }, [rides, filters]);
+  }, [searchResults, filters]);
 
   const handleInputChange = (e) => {
-    setSearchParams({ ...searchParams, [e.target.name]: e.target.value });
+    setFormValues({ ...formValues, [e.target.name]: e.target.value });
   };
 
   const handleSearch = async (e) => {
     e.preventDefault();
     try {
-      const response = await API.get("/rides", { params: searchParams });
-      setRides(response.data);
-      console.log(response.data);
-      setHasSearched(true);
+      setSearchParams(formValues);
+
+      const response = await API.get("/rides", { params: formValues });
+      const formattedRides = response.data.map((ride) => ({
+        ...ride,
+        departureTime: new Date(
+          ride.departureTime.endsWith("Z")
+            ? ride.departureTime
+            : ride.departureTime + "Z",
+        ),
+        arrivalTime: new Date(
+          ride.arrivalTime.endsWith("Z")
+            ? ride.arrivalTime
+            : ride.arrivalTime + "Z",
+        ),
+      }));
+
+      console.log(formattedRides);
+
+      setSearchResults(formattedRides);
     } catch (err) {
       console.error(err);
     }
@@ -96,15 +105,19 @@ const Dashboard = () => {
   };
 
   const countInTimeRange = (startHour, endHour) => {
-    return rides.filter((r) => {
-      const hour = new Date(r.departureTime).getHours();
+    return searchResults.filter((r) => {
+      const dateObj =
+        r.departureTime instanceof Date
+          ? r.departureTime
+          : new Date(r.departureTime);
+      const hour = dateObj.getHours();
       return hour >= startHour && hour <= endHour;
     }).length;
   };
 
   const formatDateLabel = (dateString) => {
     if (!dateString) return "";
-    return new Date(dateString).toLocaleDateString("sr-RS", {
+    return new Date(dateString).toLocaleDateString("sr-Latn-RS", {
       weekday: "long",
       day: "numeric",
       month: "long",
@@ -124,12 +137,15 @@ const Dashboard = () => {
       },
     });
 
-  if (!user)
+  if (!user) {
     return (
       <div className="p-50 text-center">
         <h2>Niste prijavljeni.</h2>
       </div>
     );
+  }
+
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <div className="dashboard-wrapper">
@@ -139,7 +155,8 @@ const Dashboard = () => {
             <input
               type="text"
               name="startCity"
-              placeholder="Odakle putujete?"
+              value={formValues.startCity}
+              placeholder="Odakle polazite?"
               onChange={handleInputChange}
               className="search-input start"
               required
@@ -147,14 +164,17 @@ const Dashboard = () => {
             <input
               type="text"
               name="endCity"
-              placeholder="Gde želite da idete?"
+              value={formValues.endCity}
+              placeholder="Gde želite da stignete?"
               onChange={handleInputChange}
               className="search-input"
               required
             />
             <input
               type="date"
+              min={today}
               name="date"
+              value={formValues.date}
               onChange={handleInputChange}
               className="search-input"
               required
@@ -163,13 +183,13 @@ const Dashboard = () => {
               type="number"
               name="seats"
               min="1"
-              value={searchParams.seats}
+              value={formValues.seats}
               onChange={handleInputChange}
               className="search-input"
               required
             />
             <button type="submit" className="search-btn">
-              Pretrazite
+              Pretraži
             </button>
           </form>
         </div>
@@ -179,7 +199,7 @@ const Dashboard = () => {
         {!hasSearched ? (
           <div className="empty-state-msg">
             <p>
-              Nakon sto unesete podatke za pretragu, vase voznje ce biti
+              Nakon što unesete podatke za pretragu, vaše vožnje će biti
               prikazane.
             </p>
           </div>
@@ -188,13 +208,13 @@ const Dashboard = () => {
             <aside className="filters-sidebar">
               <div className="filter-group">
                 <div className="filter-header">
-                  <label>Poredjajte po</label>
+                  <label>Poređaj po</label>
                   <button
                     className="btn-link"
                     onClick={resetFilters}
                     disabled={!isFilterActive}
                   >
-                    Izbrisite sve
+                    Izbriši sve
                   </button>
                 </div>
                 <div className="selection-list">
@@ -220,7 +240,7 @@ const Dashboard = () => {
                         setFilters({ ...filters, sortBy: e.target.value })
                       }
                     />
-                    Najniza cena
+                    Najniža cena
                   </label>
                 </div>
               </div>
@@ -271,29 +291,29 @@ const Dashboard = () => {
                       type="checkbox"
                       checked={filters.amenities.maxTwoBack}
                       onChange={(e) =>
-                        setFilters({
-                          ...filters,
+                        setFilters((f) => ({
+                          ...f,
                           amenities: {
-                            ...filters.amenities,
+                            ...f.amenities,
                             maxTwoBack: e.target.checked,
                           },
-                        })
+                        }))
                       }
                     />
-                    Najvise 2 na zadnjem sedistu
+                    Najviše dvoje na zadnjem sedištu
                   </label>
                   <label className="control-item">
                     <input
                       type="checkbox"
                       checked={filters.amenities.autoConfirm}
                       onChange={(e) =>
-                        setFilters({
-                          ...filters,
+                        setFilters((f) => ({
+                          ...f,
                           amenities: {
-                            ...filters.amenities,
+                            ...f.amenities,
                             autoConfirm: e.target.checked,
                           },
-                        })
+                        }))
                       }
                     />
                     Automatska rezervacija
@@ -303,29 +323,29 @@ const Dashboard = () => {
                       type="checkbox"
                       checked={filters.amenities.smoking}
                       onChange={(e) =>
-                        setFilters({
-                          ...filters,
+                        setFilters((f) => ({
+                          ...f,
                           amenities: {
-                            ...filters.amenities,
+                            ...f.amenities,
                             smoking: e.target.checked,
                           },
-                        })
+                        }))
                       }
                     />
-                    Dozvoljeno pusenje
+                    Dozvoljeno pušenje
                   </label>
                   <label className="control-item">
                     <input
                       type="checkbox"
                       checked={filters.amenities.pets}
                       onChange={(e) =>
-                        setFilters({
-                          ...filters,
+                        setFilters((f) => ({
+                          ...f,
                           amenities: {
-                            ...filters.amenities,
+                            ...f.amenities,
                             pets: e.target.checked,
                           },
-                        })
+                        }))
                       }
                     />
                     Ljubimci su dozvoljeni
@@ -343,7 +363,7 @@ const Dashboard = () => {
                   </strong>
                 </div>
                 <div className="results-count">
-                  {filteredRides.length} dostupnih voznji
+                  {filteredRides.length} dostupnih vožnji
                 </div>
               </div>
               <div className="rides-list">
@@ -356,7 +376,7 @@ const Dashboard = () => {
                 ))}
                 {filteredRides.length === 0 && (
                   <p className="no-results">
-                    Nema voznji koje odgovaraju zadatim filterima.
+                    Nema vožnji koje odgovaraju zadatim filterima.
                   </p>
                 )}
               </div>

@@ -1,0 +1,186 @@
+.my-rides-container {
+  padding-top: 40px;
+  padding-bottom: 80px;
+  max-width: 800px;
+}
+.my-rides-container .section-label {
+  font-size: 24px !important;
+  font-weight: 500;
+  margin-bottom: 25px !important;
+  color: #333;
+}
+
+.my-ride-card {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.mr-row-1 {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 15px;
+}
+
+.mr-date {
+  font-weight: 500;
+  color: #333;
+  font-size: 1rem;
+}
+
+.mr-rate-btn {
+  background-color: #27ae60;
+  color: white;
+  border: none;
+  padding: 6px 16px;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.mr-rate-btn:hover {
+  background-color: #219150;
+  transform: scale(1.05);
+}
+
+.badge-cancelled {
+  font-weight: 400;
+  padding: 2px 8px;
+  border: 1px solid #888;
+  border-radius: 5px;
+}
+
+.mr-row-2 {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+  margin-bottom: 15px;
+}
+
+.mr-point {
+  display: flex;
+  flex-direction: column;
+}
+.mr-time {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #333;
+}
+.mr-city {
+  font-size: 0.9rem;
+  color: #666;
+  font-weight: 500;
+}
+
+.mr-path {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.mr-duration {
+  font-size: 0.8rem;
+  color: #666;
+  margin-bottom: 3px;
+}
+.mr-dotted-line {
+  width: 100%;
+  height: 2px;
+  border-top: 2px dotted #ddd;
+}
+
+.mr-divider {
+  height: 1px;
+  background-color: #f0f0f0;
+  margin: 15px 0;
+}
+
+.mr-row-3 {
+  display: flex;
+  align-items: center;
+}
+
+.mr-driver-info {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mr-car-icon {
+  width: 18px;
+  opacity: 0.5;
+}
+.mr-driver-img {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #eee;
+}
+
+.mr-driver-name {
+  font-weight: 500;
+  font-size: 1rem;
+  color: #333;
+}
+
+.mr-self-tag {
+  margin-left: 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 1rem;
+}
+
+.archive-accordion {
+  margin-top: 40px;
+  background: #f8f9fa;
+  padding: 15px 20px;
+  border-radius: 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  font-weight: 700;
+  color: #555;
+  transition: 0.2s;
+}
+
+.archive-accordion:hover {
+  background: #f0f2f5;
+}
+
+.arrow-icon {
+  transition: transform 0.3s;
+}
+
+.archive-accordion.open .arrow-icon {
+  transform: rotate(180deg);
+}
+
+.archive-content {
+  margin-top: 20px;
+  animation: fadeIn 0.3s ease-in;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.empty-msg {
+  color: #888;
+  font-size: 1.1rem;
+  padding-left: 20px;
+  font-style: italic;
+  margin-bottom: 20px;
+}

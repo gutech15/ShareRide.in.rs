@@ -11,6 +11,7 @@
   justify-content: center;
   background-color: #f0f2f5;
   padding: 40px 0;
+  padding-top: 0;
 }
 
 .ride-card {
@@ -29,6 +30,25 @@
   padding: 0;
 }
 
+.ride-form-layout .form-title {
+  font-size: 24px;
+  margin-bottom: 36px;
+}
+
+.ride-form-layout .input-group {
+  gap: 5px;
+  margin-bottom: 15px;
+}
+
+.ride-form-layout .input-group label {
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.ride-form-layout .form-row {
+  gap: 20px !important;
+}
+
 .form-row {
   display: flex;
   gap: 20px;
@@ -44,9 +64,8 @@
 
 .input-group label {
   font-size: 0.85rem;
-  font-weight: 700;
+  font-weight: 500;
   color: #555;
-  margin-bottom: 5px;
 }
 
 .input-group input {
@@ -56,6 +75,8 @@
   border-radius: 8px;
   font-family: inherit;
   width: 100%;
+  color: #333;
+  font-size: 14px;
 }
 
 .checkbox-container {
@@ -67,6 +88,7 @@
   background-color: #f9f9f9;
   border-radius: 10px;
   width: 100%;
+  margin-top: 10px;
 }
 
 .checkbox-control {
@@ -74,7 +96,7 @@
   align-items: center;
   gap: 10px;
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
 }
 
@@ -88,10 +110,10 @@
   width: 100%;
   border-radius: 8px;
   border: none;
-  background-color: #057fff;
+  background-color: #489fb5;
   color: #ffffff;
   font-size: 1rem;
-  font-weight: 700;
+  font-weight: 500;
   padding: 15px 0;
   cursor: pointer;
   transition: opacity 0.2s;
@@ -99,4 +121,40 @@
 
 .auth-main-btn:hover {
   opacity: 0.9;
+}
+
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 12px 24px;
+  border-radius: 8px;
+  color: white;
+  font-weight: 500;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
+  animation: slideUp 0.3s ease-out;
+}
+
+.toast-notification.success {
+  background-color: #489fb5;
+  border: 1px solid #16697a;
+}
+
+.toast-notification.error {
+  background-color: #e74c3c;
+  border: 1px solid #c0392b;
+  text-align: center;
+}
+
+@keyframes slideUp {
+  from {
+    bottom: -50px;
+    opacity: 0;
+  }
+  to {
+    bottom: 30px;
+    opacity: 1;
+  }
 }

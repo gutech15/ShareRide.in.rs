@@ -15,7 +15,6 @@
   opacity: 0.6;
 }
 
-/* GORNJA POLOVINA */
 .card-top {
   display: flex;
   justify-content: space-between;
@@ -37,14 +36,14 @@
 
 .point .time {
   font-size: 1.2rem;
-  font-weight: 800;
+  font-weight: 600;
   color: #333;
 }
 
 .point .city {
   font-size: 0.9rem;
   color: #666;
-  font-weight: 600;
+  font-weight: 500;
 }
 
 .path-container {
@@ -56,8 +55,8 @@
 
 .duration {
   font-size: 0.8rem;
-  color: #888;
-  margin-bottom: 4px;
+  color: #666;
+  margin-bottom: 3px;
 }
 
 .dotted-line {
@@ -85,20 +84,20 @@
 
 .price {
   font-size: 1.3rem;
-  font-weight: 800;
+  font-weight: 600;
   color: #333;
 }
 
 .status-text {
-  font-weight: 700;
-  font-size: 0.9rem;
+  font-weight: 500;
+  font-size: 1.1rem;
 }
 
 .status-text.full {
-  color: #e74c3c;
+  color: #666;
 }
 .status-text.no-seats {
-  color: #f39c12;
+  color: #666;
 }
 
 .divider-horizontal {
@@ -107,7 +106,6 @@
   margin: 0 -20px;
 }
 
-/* DONJA POLOVINA */
 .card-bottom {
   padding-top: 15px;
 }
@@ -138,9 +136,9 @@
 }
 
 .driver-name {
-  font-weight: 700;
+  font-weight: 500;
   color: #333;
-  font-size: 0.95rem;
+  font-size: 1rem;
 }
 
 .rating {
@@ -159,9 +157,9 @@
   display: flex;
   align-items: center;
   gap: 12px;
-  color: #27ae60;
-  font-weight: 600;
-  font-size: 0.85rem;
+  color: #666;
+  font-weight: 400;
+  font-size: 0.9rem;
 }
 
 .vertical-line {

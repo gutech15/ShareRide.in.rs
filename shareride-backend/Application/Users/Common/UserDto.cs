@@ -6,5 +6,6 @@ public record UserDto(
     string LastName,
     string? ProfilePictureUrl,
     string Email,
+    DateTime DateOfBirth,
     string Token
 );

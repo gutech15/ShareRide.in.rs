@@ -5,7 +5,7 @@ import "./CreateRide.css";
 
 const CreateRide = () => {
   const navigate = useNavigate();
-  const [error, setError] = useState("");
+  const [toast, setToast] = useState({ message: "", type: "", visible: false });
   const [formData, setFormData] = useState({
     startCity: "",
     endCity: "",
@@ -31,16 +31,47 @@ const CreateRide = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const depTime = new Date(formData.departureTime);
+    const arrTime = new Date(formData.arrivalTime);
+
+    console.log(arrTime <= depTime);
+
+    if (arrTime <= depTime) {
+      setToast({
+        message: "Vreme dolaska mora biti nakon vremena polaska.",
+        type: "error",
+        visible: true,
+      });
+      setTimeout(() => setToast((prev) => ({ ...prev, visible: false })), 4000);
+      return;
+    }
+
     try {
       const payload = {
         ...formData,
         departureTime: new Date(formData.departureTime).toISOString(),
         arrivalTime: new Date(formData.arrivalTime).toISOString(),
       };
-      await API.post("/rides", payload);
-      navigate("/dashboard");
+      const response = await API.post("/rides", payload);
+      console.log(response);
+      const newRideId = response.data;
+
+      setToast({
+        message: "Vožnja je uspešno kreirana!",
+        type: "success",
+        visible: true,
+      });
+
+      setTimeout(() => {
+        navigate(`/rides/${newRideId}`);
+      }, 2000);
     } catch (err) {
-      setError(err.response?.data?.detail || "Greska pri kreiranju voznje");
+      const errorMsg =
+        err.response?.data?.detail || "Greška pri kreiranju vožnje";
+      setToast({ message: errorMsg, type: "error", visible: true });
+
+      setTimeout(() => setToast((prev) => ({ ...prev, visible: false })), 4000);
     }
   };
 
@@ -49,8 +80,7 @@ const CreateRide = () => {
       <div className="form-main-content">
         <div className="ride-card">
           <form onSubmit={handleSubmit} className="ride-form-layout">
-            <h1 className="form-title">Nova voznja</h1>
-            {error && <div className="error-box">{error}</div>}
+            <h1 className="form-title">Nova vožnja</h1>
 
             <div className="form-row">
               <div className="input-group">
@@ -133,7 +163,7 @@ const CreateRide = () => {
                   name="allowSmoking"
                   onChange={handleChange}
                 />{" "}
-                Dozvoljeno pusenje
+                Dozvoljeno pušenje
               </label>
               <label className="checkbox-control">
                 <input
@@ -149,7 +179,7 @@ const CreateRide = () => {
                   name="maxTwoBackSeats"
                   onChange={handleChange}
                 />{" "}
-                Najvise 2 pozadi
+                Najviše dvoje pozadi
               </label>
               <label className="checkbox-control">
                 <input
@@ -157,16 +187,21 @@ const CreateRide = () => {
                   name="isAutoConfirmation"
                   onChange={handleChange}
                 />{" "}
-                Auto-potvrda
+                Automatska rezervacija
               </label>
             </div>
 
             <button type="submit" className="auth-main-btn">
-              Kreirajte voznju
+              Kreiraj vožnju
             </button>
           </form>
         </div>
       </div>
+      {toast.visible && (
+        <div className={`toast-notification ${toast.type}`}>
+          {toast.message}
+        </div>
+      )}
     </div>
   );
 };

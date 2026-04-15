@@ -10,7 +10,8 @@ public record RegisterUserCommand(
     string LastName,
     string Email,
     string Password,
-    string PhoneNumber) : IRequest<UserDto>;
+    string PhoneNumber,
+    DateTime DateOfBirth) : IRequest<UserDto>;
 
 public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
 {
@@ -36,6 +37,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
             FirstName = request.FirstName,
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
+            DateOfBirth = request.DateOfBirth,
             ProfilePictureUrl = null
         };
 
@@ -53,6 +55,7 @@ public class RegisterUserHandler : IRequestHandler<RegisterUserCommand, UserDto>
             user.LastName,
             user.ProfilePictureUrl,
             user.Email!,
+            user.DateOfBirth,
             _tokenService.CreateToken(user)
         );
     }

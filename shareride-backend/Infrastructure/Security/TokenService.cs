@@ -19,7 +19,6 @@ public class TokenService : ITokenService
 
     public string CreateToken(User user)
     {
-        // 1. Podaci o korisniku koje pakujemo u token (Claims)
         var claims = new List<Claim>
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
@@ -27,11 +26,9 @@ public class TokenService : ITokenService
             new Claim(ClaimTypes.GivenName, user.FirstName)
         };
 
-        // 2. Kreiranje kljuca za potpisivanje
         var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["JwtSettings:Key"]!));
         var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
 
-        // 3. Opis tokena (koliko traje, ko ga izdaje...)
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(claims),
@@ -41,7 +38,6 @@ public class TokenService : ITokenService
             Audience = _config["JwtSettings:Audience"]
         };
 
-        // 4. Generisanje tokena
         var tokenHandler = new JwtSecurityTokenHandler();
         var token = tokenHandler.CreateToken(tokenDescriptor);
 

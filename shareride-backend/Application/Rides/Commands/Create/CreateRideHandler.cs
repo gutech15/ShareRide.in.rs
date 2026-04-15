@@ -2,6 +2,7 @@
 using Domain.Entities;
 using Domain.Enums;
 using MediatR;
+using Microsoft.EntityFrameworkCore;
 
 namespace Application.Rides.Commands.Create;
 
@@ -16,6 +17,26 @@ public class CreateRideHandler : IRequestHandler<CreateRideCommand, Guid>
 
     public async Task<Guid> Handle(CreateRideCommand request, CancellationToken cancellationToken)
     {
+        if (request.ArrivalTime <= request.DepartureTime)
+        {
+            throw new InvalidOperationException("Vreme dolaska mora biti nakon vremena polaska.");
+        }
+
+        var bufferStart = request.DepartureTime.AddMinutes(-30);
+        var bufferEnd = request.ArrivalTime.AddMinutes(30);
+
+        var hasOverlap = await _context.Rides
+            .AnyAsync(r => r.DriverId == request.DriverId!.Value
+                        && r.Status != RideStatus.Cancelled 
+                        && bufferEnd > r.DepartureTime
+                        && bufferStart < r.ArrivalTime,
+                cancellationToken);
+
+        if (hasOverlap)
+        {
+            throw new InvalidOperationException("Vec imate zakazanu voznju u ovom periodu. Potrebno je ostaviti bar 30 minuta pauze izmedju voznji.");
+        }
+
         var ride = new Ride
         {
             StartCity = request.StartCity,
@@ -30,7 +51,7 @@ public class CreateRideHandler : IRequestHandler<CreateRideCommand, Guid>
             AllowPets = request.AllowPets,
             MaxTwoBackSeats = request.MaxTwoBackSeats,
             IsAutoConfirmation = request.IsAutoConfirmation,
-            DriverId = request.DriverId!.Value, // Vrednost dobijena iz tokena u kontroleru
+            DriverId = request.DriverId!.Value,
             Status = RideStatus.Active 
         };
 

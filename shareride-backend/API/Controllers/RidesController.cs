@@ -1,4 +1,6 @@
-﻿using Application.Rides.Commands.Create;
+﻿using Application.Rides.Commands.CancelRide;
+using Application.Rides.Commands.Create;
+using Application.Rides.Queries.GetMyRides;
 using Application.Rides.Queries.GetRideDetails;
 using Application.Rides.Queries.GetRides;
 using MediatR;
@@ -32,6 +34,16 @@ public class RidesController : ControllerBase
         return Ok(resultId);
     }
 
+    [HttpPost("{id}/cancel")]
+    public async Task<IActionResult> CancelRide(Guid id)
+    {
+        var userId = Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!);
+
+        await _mediator.Send(new CancelRideCommand(id, userId));
+
+        return NoContent();
+    }
+
     [HttpGet]
     public async Task<ActionResult<List<RideSearchDto>>> GetRides(
     [FromQuery] string? startCity,
@@ -45,6 +57,18 @@ public class RidesController : ControllerBase
     [HttpGet("{id}")]
     public async Task<ActionResult<RideDetailsDto>> GetRideDetails(Guid id)
     {
-        return Ok(await _mediator.Send(new GetRideDetailsQuery(id)));
+        var currentUserId = User.Identity?.IsAuthenticated == true
+            ? Guid.Parse(User.FindFirst(ClaimTypes.NameIdentifier)?.Value!)
+            : (Guid?)null;
+
+        return Ok(await _mediator.Send(new GetRideDetailsQuery(id, currentUserId)));
+    }
+
+    [HttpGet("my-rides/{userId}")]
+    public async Task<IActionResult> GetMyRides(Guid userId, [FromQuery] string status = "active")
+    {
+        var query = new GetMyRidesQuery { UserId = userId, Status = status };
+        var result = await _mediator.Send(query);
+        return Ok(result);
     }
 }
