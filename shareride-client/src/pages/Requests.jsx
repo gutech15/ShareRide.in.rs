@@ -109,7 +109,7 @@ const Requests = () => {
       <div className="col-route">
         <div className="route-mini">
           <div className="pnt">
-            <span className="tm">{formatTime(req.departureTime)}</span>
+            <span className="tm">{formatTime(req.departureTime + "z")}</span>
             <span className="ct">{req.startCity}</span>
           </div>
           <div className="pth">
@@ -119,7 +119,7 @@ const Requests = () => {
             <div className="dot-line"></div>
           </div>
           <div className="pnt">
-            <span className="tm">{formatTime(req.arrivalTime)}</span>
+            <span className="tm">{formatTime(req.arrivalTime + "z")}</span>
             <span className="ct">{req.endCity}</span>
           </div>
         </div>

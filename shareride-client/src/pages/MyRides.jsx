@@ -115,7 +115,9 @@ const MyRides = () => {
             <div className="mr-dotted-line"></div>
           </div>
           <div className="mr-point">
-            <span className="mr-time">{formatTime(ride.arrivalTime)}</span>
+            <span className="mr-time">
+              {formatTime(ride.arrivalTime + "z")}
+            </span>
             <span className="mr-city">{ride.endCity}</span>
           </div>
         </div>

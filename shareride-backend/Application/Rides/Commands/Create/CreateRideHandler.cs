@@ -25,16 +25,30 @@ public class CreateRideHandler : IRequestHandler<CreateRideCommand, Guid>
         var bufferStart = request.DepartureTime.AddMinutes(-30);
         var bufferEnd = request.ArrivalTime.AddMinutes(30);
 
-        var hasOverlap = await _context.Rides
+        var hasRideOverlap = await _context.Rides
             .AnyAsync(r => r.DriverId == request.DriverId!.Value
-                        && r.Status != RideStatus.Cancelled 
+                        && r.Status == RideStatus.Active 
                         && bufferEnd > r.DepartureTime
                         && bufferStart < r.ArrivalTime,
                 cancellationToken);
 
-        if (hasOverlap)
+        if (hasRideOverlap)
         {
             throw new InvalidOperationException("Vec imate zakazanu voznju u ovom periodu. Potrebno je ostaviti bar 30 minuta pauze izmedju voznji.");
+        }
+
+        var hasBookingOverlap = await _context.Bookings
+        .Include(b => b.Ride)
+        .AnyAsync(b => b.PassengerId == request.DriverId!.Value &&
+                       (b.Status == BookingStatus.Approved || b.Status == BookingStatus.Pending) &&
+                       b.Ride.Status == RideStatus.Active &&
+                       b.Ride.DepartureTime <= bufferEnd &&
+                       b.Ride.ArrivalTime >= bufferStart,
+            cancellationToken);
+
+        if (hasBookingOverlap)
+        {
+            throw new InvalidOperationException("Ne možete kreirati vožnju jer ste u tom periodu (+-30 min) prijavljeni kao putnik na drugoj vožnji.");
         }
 
         var ride = new Ride

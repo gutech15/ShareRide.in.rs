@@ -28,6 +28,29 @@ public class CreateBookingCommandHandler : IRequestHandler<CreateBookingCommand,
         if (ride.DriverId == request.PassengerId)
             throw new Exception("Ne mozete da napravite rezervaciju za sopstvenu voznju.");
 
+        var windowStart = ride.DepartureTime.AddMinutes(-30);
+        var windowEnd = ride.ArrivalTime.AddMinutes(30);
+
+        var isDrivingInThatTime = await _context.Rides
+            .AnyAsync(r => r.DriverId == request.PassengerId &&
+                           r.Status == RideStatus.Active &&
+                           r.DepartureTime <= windowEnd &&
+                           r.ArrivalTime >= windowStart, cancellationToken);
+
+        if (isDrivingInThatTime)
+            throw new Exception("Ne mozete rezervisati ovu voznju jer u tom periodu (+-30 min) vec imate kreiranu svoju voznju gde ste vozac.");
+
+        var isTravelingInThatTime = await _context.Bookings
+            .Include(b => b.Ride)
+            .AnyAsync(b => b.PassengerId == request.PassengerId &&
+                           (b.Status == BookingStatus.Approved || b.Status == BookingStatus.Pending) &&
+                           b.Ride.Status == RideStatus.Active &&
+                           b.Ride.DepartureTime <= windowEnd &&
+                           b.Ride.ArrivalTime >= windowStart, cancellationToken);
+
+        if (isTravelingInThatTime)
+            throw new Exception("Ne mozete rezervisati ovu voznju jer vec imate aktivnu rezervaciju u tom periodu (+-30 min).");
+
         var existingBooking = await _context.Bookings
             .AnyAsync(b => b.RideId == request.RideId
                         && b.PassengerId == request.PassengerId
