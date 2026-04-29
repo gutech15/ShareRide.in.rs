@@ -4,6 +4,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import axiosInstance from "../api/axiosInstance";
 import { getImageUrl } from "../api/imageHelper";
 import "./MyRides.css";
+import Loader from "../components/Loader";
 
 const MyRides = () => {
   const { user } = useAuthStore();
@@ -146,7 +147,7 @@ const MyRides = () => {
     <div className="my-rides-container container">
       <h2 className="section-label">Aktivne vožnje</h2>
       {loadingActive ? (
-        <p>Učitavanje...</p>
+        <Loader />
       ) : activeRides.length > 0 ? (
         activeRides.map((r) => <MyRideCard key={r.rideId} ride={r} />)
       ) : (

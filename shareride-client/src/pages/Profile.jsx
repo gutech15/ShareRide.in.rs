@@ -5,6 +5,7 @@ import { useRideStore } from "../store/useRideStore";
 import axiosInstance from "../api/axiosInstance";
 import { getImageUrl } from "../api/imageHelper";
 import "./Profile.css";
+import Loader from "../components/Loader";
 
 const Profile = () => {
   const { id } = useParams();
@@ -14,6 +15,7 @@ const Profile = () => {
 
   const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [showLoader, setShowLoader] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
   const [showToast, setShowToast] = useState(false);
 
@@ -157,10 +159,31 @@ const Profile = () => {
     return hasTextChanged || hasImageChanged;
   };
 
-  if (loading && !profile)
-    return <div className="p-50 text-center">Učitavanje...</div>;
-  if (!profile)
+  useEffect(() => {
+    let timer;
+    if (loading) {
+      timer = setTimeout(() => {
+        setShowLoader(true);
+      }, 300);
+    } else {
+      setShowLoader(false);
+      clearTimeout(timer);
+    }
+
+    return () => clearTimeout(timer);
+  }, [loading]);
+
+  if (showLoader && loading) {
+    return <Loader />;
+  }
+
+  if (!loading && !profile) {
     return <div className="p-50 text-center">Korisnik nije pronađen.</div>;
+  }
+
+  if (!profile) {
+    return null;
+  }
 
   return (
     <div className="profile-page container">

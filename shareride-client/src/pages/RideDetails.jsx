@@ -5,6 +5,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import axiosInstance from "../api/axiosInstance";
 import { getImageUrl } from "../api/imageHelper";
 import "./RideDetails.css";
+import Loader from "../components/Loader";
 
 const RideDetails = () => {
   const { id } = useParams();
@@ -204,8 +205,7 @@ const RideDetails = () => {
     });
   };
 
-  if (loading)
-    return <div className="p-50 text-center">Učitavanje detalja...</div>;
+  if (loading) return <Loader />;
   if (!ride)
     return <div className="p-50 text-center">Vožnja nije pronađena.</div>;
 

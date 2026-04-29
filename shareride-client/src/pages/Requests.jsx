@@ -3,6 +3,7 @@ import { useAuthStore } from "../store/useAuthStore";
 import axiosInstance from "../api/axiosInstance";
 import { getImageUrl } from "../api/imageHelper";
 import "./Requests.css";
+import Loader from "../components/Loader";
 
 const Requests = () => {
   const { user } = useAuthStore();
@@ -149,7 +150,7 @@ const Requests = () => {
     </div>
   );
 
-  if (loading) return <div className="p-50 text-center">Učitavanje...</div>;
+  if (loading) return <Loader />;
 
   return (
     <div className="requests-container container">
